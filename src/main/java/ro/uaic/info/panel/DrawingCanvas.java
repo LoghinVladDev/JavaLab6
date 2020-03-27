@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DrawingCanvas extends JPanel {
+    private App mainFrame;
+
     public DrawingCanvas(App mainFrame){
         super();
         this.setBounds(
@@ -16,11 +18,12 @@ public class DrawingCanvas extends JPanel {
                         mainFrame.getControls().getHeight() -
                         App.TITLE_BAR_HEIGHT
          );
-
+        this.mainFrame = mainFrame;
         this.setBackground(Color.WHITE);
     }
 
     public void shrinkForSettingsPanel(int width){
+        if(!ShapeSettings.isInitialised())
         this.setBounds(
                 this.getX(),
                 this.getY(),

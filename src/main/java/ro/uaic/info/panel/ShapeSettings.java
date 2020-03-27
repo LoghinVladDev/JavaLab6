@@ -15,6 +15,12 @@ public class ShapeSettings extends JPanel {
     private JSpinner sizeSlider;
     private JSpinner strokeSlider;
 
+    private static boolean initalised =  false;
+
+    public static boolean isInitialised() {
+        return ShapeSettings.initalised;
+    }
+
     public JSpinner getSizeSlider(){
         return this.sizeSlider;
     }
@@ -82,6 +88,7 @@ public class ShapeSettings extends JPanel {
         this.setBackground(Color.LIGHT_GRAY);
 
         mainFrame.getCanvas().shrinkForSettingsPanel(this.windowWidth);
+        ShapeSettings.initalised = true;
     }
 
     public int getWindowWidth(){
