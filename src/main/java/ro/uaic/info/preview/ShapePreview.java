@@ -32,9 +32,10 @@ public class ShapePreview extends JPanel {
 
     private void initializeShapeSettings(){
         //System.out.println(this.selectButton.getText());
-        if(this.parent.getMainFrame().getShapeSettings() == null ||
-                !this.parent.getMainFrame().getShapeSettings().getWhichShape().equals(this.selectButton.getText()))
+        if(this.parent.getMainFrame().getShapeSettings() == null)
         this.parent.getMainFrame().setShapeSettings(new ShapeSettings(this.parent.getMainFrame(), this));
+        else
+            this.parent.getMainFrame().getShapeSettings().resetSettings(this);
     }
 
     public String getShapeName(){

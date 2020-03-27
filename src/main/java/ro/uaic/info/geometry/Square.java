@@ -1,45 +1,45 @@
 package ro.uaic.info.geometry;
 
 import ro.uaic.info.panel.App;
+import ro.uaic.info.panel.DrawingCanvas;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 
-public class Circle extends Shape {
+public class Square extends Shape{
     private App mainApp;
     private Graphics2D graphics;
     private int x;
     private int y;
-    private int ray;
+    private int length;
     private int stroke;
 
-    public Circle(App mainApp, Object size, Object stroke, Point center){
+    public Square(App mainFrame, Object size, Object stroke, Point center){
         System.out.println(size + " " + stroke + " " + center.x + " " + center.y);
 
         this.x = center.x;
         this.y = center.y;
-        this.ray = (int)size;
+        this.length = (int)size;
         this.stroke = (int)stroke;
 
-        this.mainApp = mainApp;
+        this.mainApp = mainFrame;
         this.graphics = this.mainApp.getCanvas().getGraphics2D();
+
     }
 
-    @Override
-    public void draw() {
-        this.graphics.drawOval(
-                this.x - ray/2,
-                this.y - ray/2,
-                this.ray,
-                this.ray
+    public void draw(){
+        this.graphics.drawRect(
+                this.x - this.length/2,
+                this.y - this.length/2,
+                this.length,
+                this.length
         );
     }
 
-    @Override
-    public void draw(Color color) {
+    public void draw(Color color){
         Color oldColor = this.graphics.getColor();
 
         this.graphics.setColor(color);
-
         this.draw();
 
         this.graphics.setColor(oldColor);

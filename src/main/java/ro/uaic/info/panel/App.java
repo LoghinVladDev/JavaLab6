@@ -1,5 +1,6 @@
 package ro.uaic.info.panel;
 
+import ro.uaic.info.exception.InvalidShape;
 import ro.uaic.info.geometry.Shape;
 import ro.uaic.info.panel.ActiveElements;
 import ro.uaic.info.panel.ControlPanel;
@@ -50,11 +51,12 @@ public class App extends JFrame {
         this.add(this.controls);
         this.add(this.canvas);
 
-        new MouseEventHandler(this.canvas);
+        new MouseEventHandler(this.canvas, this);
 
         super.setLayout(null);
         super.setVisible(true);
         super.setSize(this.windowWidth+15, this.windowHeight);
+        this.canvas.initGraphics();
     }
 
     public ShapeSelector getShapes(){
@@ -76,14 +78,24 @@ public class App extends JFrame {
 
 
 class MouseEventHandler implements MouseListener {
+    private App mainFrame;
 
-    public MouseEventHandler(DrawingCanvas canvas){
+    public MouseEventHandler(DrawingCanvas canvas, App mainFrame){
         canvas.addMouseListener(this);
+        this.mainFrame = mainFrame;
     }
 
     public void mousePressed(MouseEvent e){
         if(e.getClickCount() == 1){
             System.out.println("Mouse pressed on " + e.getComponent().getClass().getName());
+            try {
+                Shape a = this.mainFrame.getShapeSettings().createShape(this.mainFrame); //TODO : Assign to left panel
+                a.draw(Color.BLACK);
+            }
+            catch(Exception exception){
+                System.out.println(exception.toString());
+                exception.printStackTrace();
+            }
         }
         //System.out.println("Mouse Pressed " + e.getClickCount() + " times");
     }

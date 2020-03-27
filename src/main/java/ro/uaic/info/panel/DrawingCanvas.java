@@ -1,10 +1,12 @@
 package ro.uaic.info.panel;
 
+
 import javax.swing.*;
 import java.awt.*;
 
 public class DrawingCanvas extends JPanel {
     private App mainFrame;
+    private Graphics2D graphics;
 
     public DrawingCanvas(App mainFrame){
         super();
@@ -22,6 +24,12 @@ public class DrawingCanvas extends JPanel {
         this.setBackground(Color.WHITE);
     }
 
+    public void initGraphics(){
+        if(this.graphics == null){
+            this.graphics = (Graphics2D) this.mainFrame.getGraphics();
+        }
+    }
+
     public void shrinkForSettingsPanel(int width){
         if(!ShapeSettings.isInitialised())
         this.setBounds(
@@ -30,5 +38,9 @@ public class DrawingCanvas extends JPanel {
                 this.getWidth() - width,
                 this.getHeight()
         );
+    }
+
+    public Graphics2D getGraphics2D(){
+        return this.graphics;
     }
 }

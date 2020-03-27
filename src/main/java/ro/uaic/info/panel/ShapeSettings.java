@@ -1,6 +1,9 @@
 package ro.uaic.info.panel;
 
+import ro.uaic.info.exception.InvalidShape;
+import ro.uaic.info.geometry.Circle;
 import ro.uaic.info.geometry.Shape;
+import ro.uaic.info.geometry.Square;
 import ro.uaic.info.preview.ShapePreview;
 
 import javax.swing.*;
@@ -55,6 +58,9 @@ public class ShapeSettings extends JPanel {
         this.sizeSlider = new JSpinner();
         this.strokeSlider = new JSpinner();
 
+        this.sizeSlider.setValue(50);
+        this.strokeSlider.setValue(2);
+
         this.shapeName = new JLabel(this.whichShape);
 
         windowLayout.setHorizontalGroup(
@@ -91,11 +97,37 @@ public class ShapeSettings extends JPanel {
         ShapeSettings.initalised = true;
     }
 
+    public void resetSettings(ShapePreview preview){
+        this.sizeSlider.setValue(50);
+        this.strokeSlider.setValue(2);
+        this.whichShape = preview.getShapeName();
+        this.shapeName.setText(this.whichShape);
+    }
+
     public int getWindowWidth(){
         return this.windowWidth;
     }
 
     public String getWhichShape(){
         return this.whichShape;
+    }
+
+    public Shape createShape(App mainApp) throws InvalidShape {
+        switch(this.whichShape){
+            case "Square" : return new Square(
+                    mainApp,
+                    this.sizeSlider.getValue(),
+                    this.strokeSlider.getValue(),
+                    MouseInfo.getPointerInfo().getLocation()
+            );
+            case "Circle" : return new Circle(
+                    mainApp,
+                    this.sizeSlider.getValue(),
+                    this.strokeSlider.getValue(),
+                    MouseInfo.getPointerInfo().getLocation()
+            );
+            default : throw new InvalidShape("No such Shape exists");
+
+        }
     }
 }
