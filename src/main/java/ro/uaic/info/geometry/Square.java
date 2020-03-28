@@ -36,6 +36,10 @@ public class Square extends Shape{
         );
     }
 
+    public void remove(){
+        this.draw(Color.WHITE);
+    }
+
     public void draw(Color color){
         Color oldColor = this.graphics.getColor();
 
@@ -43,5 +47,12 @@ public class Square extends Shape{
         this.draw();
 
         this.graphics.setColor(oldColor);
+    }
+
+    public String getName(){
+        return "Square";
+    }
+    public String toString(){
+        return "Square";
     }
 }

@@ -11,4 +11,8 @@ public abstract class Shape {
 
     public abstract void draw();
     public abstract void draw(Color color);
+    public abstract String getName();
+    public abstract void remove();
+
+    public abstract String toString();
 }

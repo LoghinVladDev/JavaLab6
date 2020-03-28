@@ -34,6 +34,10 @@ public class Circle extends Shape {
         );
     }
 
+    public void remove(){
+        this.draw(Color.WHITE);
+    }
+
     @Override
     public void draw(Color color) {
         Color oldColor = this.graphics.getColor();
@@ -43,5 +47,13 @@ public class Circle extends Shape {
         this.draw();
 
         this.graphics.setColor(oldColor);
+    }
+
+    public String getName(){
+        return "Circle";
+    }
+
+    public String toString(){
+        return "Circle";
     }
 }

@@ -91,6 +91,7 @@ class MouseEventHandler implements MouseListener {
             try {
                 Shape a = this.mainFrame.getShapeSettings().createShape(this.mainFrame); //TODO : Assign to left panel
                 a.draw(Color.BLACK);
+                this.mainFrame.getActiveShapes().addShape(a);
             }
             catch(Exception exception){
                 System.out.println(exception.toString());
