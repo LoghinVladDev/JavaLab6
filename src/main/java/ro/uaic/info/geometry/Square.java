@@ -28,6 +28,7 @@ public class Square extends Shape{
     }
 
     public void draw(){
+        this.graphics.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0f, null, 0f));
         this.graphics.drawRect(
                 this.x - this.length/2,
                 this.y - this.length/2,

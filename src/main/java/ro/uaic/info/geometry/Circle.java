@@ -26,6 +26,7 @@ public class Circle extends Shape {
 
     @Override
     public void draw() {
+        this.graphics.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0f, null, 0f));
         this.graphics.drawOval(
                 this.x - ray/2,
                 this.y - ray/2,
