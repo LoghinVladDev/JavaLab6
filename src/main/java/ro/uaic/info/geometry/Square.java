@@ -5,8 +5,9 @@ import ro.uaic.info.panel.DrawingCanvas;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.io.Serializable;
 
-public class Square extends Shape{
+public class Square extends Shape implements Serializable {
     private App mainApp;
     private Graphics2D graphics;
     private int x;

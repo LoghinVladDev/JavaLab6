@@ -4,11 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import ro.uaic.info.geometry.*;
 import ro.uaic.info.geometry.Shape;
 
-public class ActiveElements extends JPanel {
+public class ActiveElements extends JPanel implements Serializable {
     private JList<Shape> activeShapesList;
     private DefaultListModel<Shape> listModel;
 
@@ -60,5 +63,46 @@ public class ActiveElements extends JPanel {
 
     public void removeShape(Shape shape){
 
+    }
+
+    public void save(String path){
+        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+                new FileOutputStream(
+                        path
+                )
+        )){
+            Shape[] shapes = new Shape[this.listModel.size()];
+            this.listModel.copyInto(shapes);
+
+            ArrayList<Shape> shapesList = new ArrayList<>();
+            shapesList.addAll(Arrays.asList(shapes));
+
+            objectOutputStream.writeObject(shapesList);
+        }
+        catch (IOException e){
+            System.out.println(e.toString());
+        }
+    }
+
+    public void load(String path){
+        try(ObjectInputStream objectInputStream = new ObjectInputStream(
+                new FileInputStream(path)
+        )){
+            ArrayList<Shape> shapesList = new ArrayList<>();
+            shapesList = (ArrayList<Shape>) objectInputStream.readObject();
+
+            clearAll();
+
+            shapesList.forEach(e->this.listModel.addElement(e));
+        }
+        catch (IOException | ClassNotFoundException e){
+            System.out.println(e.toString());
+        }
+    }
+
+    public void clearAll(){
+        while(!listModel.isEmpty()){
+            listModel.remove(0).remove();
+        }
     }
 }
