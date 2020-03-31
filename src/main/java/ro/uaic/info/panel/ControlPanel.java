@@ -12,6 +12,8 @@ public class ControlPanel extends JPanel{
     private JButton saveButton;
     private JButton loadButton;
     private JButton clearButton;
+    private JButton saveImageButton;
+
 
     public ControlPanel(App mainFrame){
         super();

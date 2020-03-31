@@ -8,12 +8,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import ro.uaic.info.exception.InvalidShape;
 import ro.uaic.info.geometry.*;
 import ro.uaic.info.geometry.Shape;
 
 public class ActiveElements extends JPanel implements Serializable {
     private JList<Shape> activeShapesList;
     private DefaultListModel<Shape> listModel;
+    private App mainFrame;
 
     public ActiveElements(App mainFrame){
         super();
@@ -27,6 +29,7 @@ public class ActiveElements extends JPanel implements Serializable {
                         - mainFrame.getControls().getHeight()
         );
 
+        this.mainFrame = mainFrame;
         this.setBackground(Color.LIGHT_GRAY);
         this.listModel = new DefaultListModel<>();
         this.activeShapesList = new JList<>(this.listModel);
@@ -74,10 +77,9 @@ public class ActiveElements extends JPanel implements Serializable {
             Shape[] shapes = new Shape[this.listModel.size()];
             this.listModel.copyInto(shapes);
 
-            ArrayList<Shape> shapesList = new ArrayList<>();
-            shapesList.addAll(Arrays.asList(shapes));
-
-            objectOutputStream.writeObject(shapesList);
+            for(Shape s : shapes){
+                s.writeObject(objectOutputStream);
+            }
         }
         catch (IOException e){
             System.out.println(e.toString());
@@ -87,15 +89,28 @@ public class ActiveElements extends JPanel implements Serializable {
     public void load(String path){
         try(ObjectInputStream objectInputStream = new ObjectInputStream(
                 new FileInputStream(path)
-        )){
+        )){/*
             ArrayList<Shape> shapesList = new ArrayList<>();
             shapesList = (ArrayList<Shape>) objectInputStream.readObject();
 
             clearAll();
 
-            shapesList.forEach(e->this.listModel.addElement(e));
+            shapesList.forEach(e->this.listModel.addElement(e));*/
+            this.clearAll();
+
+            Shape s;
+
+            do{
+                s = Shape.readObject(objectInputStream);
+                if(s != null) {
+                    s.setGraphics((Graphics2D)this.mainFrame.getGraphics());
+                    this.listModel.addElement(s);
+                    s.draw();
+                    System.out.println(s);
+                }
+            }while(s != null);
         }
-        catch (IOException | ClassNotFoundException e){
+        catch (IOException | InvalidShape e){
             System.out.println(e.toString());
         }
     }
