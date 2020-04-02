@@ -30,6 +30,7 @@ public class ShapeSelector extends JPanel {
 
         j.add(new ShapePreview(this, "Square"));
         j.add(new ShapePreview(this, "Circle"));
+        j.add(new ShapePreview(this,"Regular Polygon"));
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 

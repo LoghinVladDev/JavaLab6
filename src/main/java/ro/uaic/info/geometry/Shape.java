@@ -70,6 +70,7 @@ public abstract class Shape implements Serializable {
             switch(shapeType){
                 case "Circle": return Circle.readSpecialisedObject(objectInputStream);
                 case "Square": return Square.readSpecialisedObject(objectInputStream);
+                case "RegPoly" : return RegularPolygon.readSpecialisedObject(objectInputStream);
                 default : return null;
             }
         }

@@ -76,7 +76,7 @@ public class Square extends Shape implements Serializable {
             this.length,
             this.length);
         graphics2D.setColor(oldColor);
-
+        
     }
 
     public String getName(){

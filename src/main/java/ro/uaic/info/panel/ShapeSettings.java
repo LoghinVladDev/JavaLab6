@@ -2,6 +2,7 @@ package ro.uaic.info.panel;
 
 import ro.uaic.info.exception.InvalidShape;
 import ro.uaic.info.geometry.Circle;
+import ro.uaic.info.geometry.RegularPolygon;
 import ro.uaic.info.geometry.Shape;
 import ro.uaic.info.geometry.Square;
 import ro.uaic.info.preview.ShapePreview;
@@ -14,9 +15,15 @@ public class ShapeSettings extends JPanel {
     private int windowWidth;
     private JLabel shapeName;
     private JLabel sizeSliderLabel;
+    private JLabel edgeCountLabel;
     private JLabel strokeSliderLabel;
+    private JLabel angleLabel;
+
     private JSpinner sizeSlider;
     private JSpinner strokeSlider;
+    private JSpinner edgeCount;
+    private JSpinner angle;
+
     private JButton selectEdgeColor;
     private JButton selectFillColor;
     private Color edgeColor = Color.BLACK;
@@ -39,7 +46,7 @@ public class ShapeSettings extends JPanel {
 
     public ShapeSettings(App mainFrame, ShapePreview selected){
         super();
-        this.windowWidth = 190;
+        this.windowWidth = 200;
         this.setBounds(
                 mainFrame.getWidth()- 16 - this.windowWidth,
                 mainFrame.getShapes().getHeight(),
@@ -52,19 +59,15 @@ public class ShapeSettings extends JPanel {
         mainFrame.add(this);
         this.whichShape = selected.getShapeName();
 
-        GroupLayout windowLayout = new GroupLayout(this);
-        this.setLayout(windowLayout);
-
-        windowLayout.setAutoCreateContainerGaps(true);
-        windowLayout.setAutoCreateGaps(true);
-
         this.sizeSliderLabel = new JLabel("Size");
         this.strokeSliderLabel = new JLabel("Stroke");
         this.sizeSlider = new JSpinner();
         this.strokeSlider = new JSpinner();
 
-        this.selectEdgeColor = new JButton("Select Edge Color");
-        this.selectFillColor = new JButton("Select Fill Color");
+
+
+        this.selectEdgeColor = new JButton("Edge Color");
+        this.selectFillColor = new JButton("Fill Color");
 
         this.isRandom = new JCheckBox("Random Color");
 
@@ -77,37 +80,7 @@ public class ShapeSettings extends JPanel {
 
         this.shapeName = new JLabel(this.whichShape);
 
-        windowLayout.setHorizontalGroup(
-                windowLayout.createSequentialGroup()
-                    .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(this.shapeName)
-                            .addComponent(this.sizeSliderLabel)
-                            .addComponent(this.strokeSliderLabel)
-                            .addComponent(this.selectEdgeColor)
-                            .addComponent(this.selectFillColor)
-                            .addComponent(this.isRandom)
-                    )
-                    .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(this.sizeSlider)
-                            .addComponent(this.strokeSlider)
-                    )
-        );
-
-        windowLayout.setVerticalGroup(
-                windowLayout.createSequentialGroup()
-                    .addComponent(this.shapeName)
-                    .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(this.sizeSliderLabel)
-                            .addComponent(this.sizeSlider)
-                    )
-                    .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(this.strokeSliderLabel)
-                            .addComponent(this.strokeSlider)
-                    )
-                    .addComponent(this.selectEdgeColor)
-                    .addComponent(this.selectFillColor)
-                    .addComponent(this.isRandom)
-        );
+        this.reInitGroups();
 
         //windowLayout.linkSize(SwingConstants.VERTICAL, this.sizeSlider, this.sizeSliderLabel);
 
@@ -129,10 +102,11 @@ public class ShapeSettings extends JPanel {
     }
 
     private void edgeSelectColor(){
+        this.edgeColor = JColorChooser.showDialog(this, "Choose an Edge Color", this.edgeColor);
     }
 
     private void fillSelectColor(){
-
+        this.fillColor = JColorChooser.showDialog(this, "Choose a Fill Color", this.fillColor);
     }
 
     public void resetSettings(ShapePreview preview){
@@ -140,6 +114,85 @@ public class ShapeSettings extends JPanel {
         this.strokeSlider.setValue(2);
         this.whichShape = preview.getShapeName();
         this.shapeName.setText(this.whichShape);
+        this.reInitGroups();
+    }
+
+    private void reInitGroups(){
+        if(this.angleLabel != null)
+            this.remove(this.angleLabel);
+        if(this.edgeCountLabel != null)
+            this.remove(this.edgeCountLabel);
+
+        GroupLayout windowLayout = new GroupLayout(this);
+        this.setLayout(windowLayout);
+
+        windowLayout.setAutoCreateContainerGaps(true);
+        windowLayout.setAutoCreateGaps(true);
+
+        if(this.whichShape.equals("Regular Polygon")){
+            SpinnerModel edgeModel = new SpinnerNumberModel(3, 3, 100, 1);
+            SpinnerModel angleModel = new SpinnerNumberModel(0, 0, 360, 1);
+
+            this.angleLabel = new JLabel("Angle");
+            this.angle = new JSpinner(angleModel);
+            this.edgeCountLabel = new JLabel("Edges");
+            this.edgeCount = new JSpinner(edgeModel);
+        }
+
+        GroupLayout.Group leftGroup = windowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(this.shapeName)
+                .addComponent(this.sizeSliderLabel)
+                .addComponent(this.strokeSliderLabel);
+
+        GroupLayout.Group rightGroup = windowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(this.sizeSlider)
+                .addComponent(this.strokeSlider);
+
+        if(this.whichShape.equals("Regular Polygon")){
+            leftGroup.addComponent(this.edgeCountLabel).addComponent(this.angleLabel);
+            rightGroup.addComponent(this.edgeCount).addComponent(this.angle);
+        }
+
+        leftGroup
+                .addComponent(this.selectEdgeColor)
+                .addComponent(this.selectFillColor)
+                .addComponent(this.isRandom);
+
+        GroupLayout.SequentialGroup horizontalGroup = windowLayout.createSequentialGroup()
+                .addGroup(leftGroup)
+                .addGroup(rightGroup);
+
+        GroupLayout.SequentialGroup verticalGroup = windowLayout.createSequentialGroup()
+                .addComponent(this.shapeName)
+                .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(this.sizeSliderLabel)
+                        .addComponent(this.sizeSlider)
+                )
+                .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(this.strokeSliderLabel)
+                        .addComponent(this.strokeSlider)
+                );
+
+        if(this.whichShape.equals("Regular Polygon")){
+            verticalGroup
+                    .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(this.edgeCountLabel)
+                            .addComponent(this.edgeCount)
+                    )
+                    .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(this.angleLabel)
+                            .addComponent(this.angle)
+                    );
+        }
+
+        verticalGroup
+                .addComponent(this.selectEdgeColor)
+                .addComponent(this.selectFillColor)
+                .addComponent(this.isRandom);
+
+
+        windowLayout.setHorizontalGroup(horizontalGroup);
+        windowLayout.setVerticalGroup(verticalGroup);
     }
 
     public int getWindowWidth(){
@@ -151,8 +204,6 @@ public class ShapeSettings extends JPanel {
     }
 
     public Shape createShape(App mainApp) throws InvalidShape {
-        Color edgeColor = Color.BLACK;
-        Color fillColor = Color.WHITE;
 
         if(this.isRandom.isSelected()){
             edgeColor = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
@@ -176,6 +227,16 @@ public class ShapeSettings extends JPanel {
                     MouseInfo.getPointerInfo().getLocation(),
                     edgeColor,
                     fillColor
+            );
+            case "Regular Polygon" : return new RegularPolygon(
+                    mainApp,
+                    this.sizeSlider.getValue(),
+                    this.strokeSlider.getValue(),
+                    MouseInfo.getPointerInfo().getLocation(),
+                    edgeColor,
+                    fillColor,
+                    this.edgeCount.getValue(),
+                    this.angle.getValue()
             );
             default : throw new InvalidShape("No such Shape exists");
 
