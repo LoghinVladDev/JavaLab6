@@ -20,14 +20,18 @@ public class Circle extends Shape implements Serializable {
         objectOutputStream.writeInt(y);
         objectOutputStream.writeInt(ray);
         objectOutputStream.writeInt(stroke);
+        objectOutputStream.writeObject(this.edgeColor);
+        objectOutputStream.writeObject(this.fillColor);
     }
 
-    public static Shape readSpecialisedObject(ObjectInputStream objectInputStream) throws IOException{
+    public static Shape readSpecialisedObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException{
         Circle c = new Circle();
         c.x = objectInputStream.readInt();
         c.y = objectInputStream.readInt();
         c.ray = objectInputStream.readInt();
         c.stroke = objectInputStream.readInt();
+        c.edgeColor = (Color) objectInputStream.readObject();
+        c.fillColor = (Color) objectInputStream.readObject();
         return c;
     }
 
@@ -58,7 +62,7 @@ public class Circle extends Shape implements Serializable {
     }
 
     @Override
-    public void draw(Graphics2D graphics2D) {
+    public void draw(Graphics2D graphics2D, Color fillColor) {
         graphics2D.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0f, null, 0f));
         graphics2D.drawOval(
                 this.x - ray/2,
@@ -66,12 +70,18 @@ public class Circle extends Shape implements Serializable {
                 this.ray,
                 this.ray
         );
+        Color oldColor = graphics2D.getColor();
+        graphics2D.setColor(fillColor);
+        graphics2D.fillOval(
+                this.x - ray/2,
+                this.y - ray/2,
+                this.ray,
+                this.ray
+        );
+        graphics2D.setColor(oldColor);
+
         //this.graphics.drawLine(this.x, this.y - ray/2, this.x, this.y + ray/2);
         //this.graphics.drawLine(this.x - ray/2, this.y, this.x + ray/2, this.y);
-    }
-
-    public void remove(){
-        this.draw(Color.WHITE);
     }
 
     public String getName(){

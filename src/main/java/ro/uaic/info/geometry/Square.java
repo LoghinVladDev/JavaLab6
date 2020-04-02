@@ -23,14 +23,18 @@ public class Square extends Shape implements Serializable {
         objectOutputStream.writeInt(y);
         objectOutputStream.writeInt(length);
         objectOutputStream.writeInt(stroke);
+        objectOutputStream.writeObject(this.edgeColor);
+        objectOutputStream.writeObject(this.fillColor);
     }
 
-    public static Shape readSpecialisedObject(ObjectInputStream objectInputStream) throws IOException {
+    public static Shape readSpecialisedObject(ObjectInputStream objectInputStream) throws IOException,ClassNotFoundException {
         Square s = new Square();
         s.x = objectInputStream.readInt();
         s.y = objectInputStream.readInt();
         s.length = objectInputStream.readInt();
         s.stroke = objectInputStream.readInt();
+        s.edgeColor = (Color) objectInputStream.readObject();
+        s.fillColor = (Color) objectInputStream.readObject();
         return s;
     }
 
@@ -56,7 +60,7 @@ public class Square extends Shape implements Serializable {
 
     }
 
-    public void draw(Graphics2D graphics2D){
+    public void draw(Graphics2D graphics2D, Color fillColor){
         graphics2D.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0f, null, 0f));
         graphics2D.drawRect(
                 this.x - this.length/2,
@@ -64,10 +68,15 @@ public class Square extends Shape implements Serializable {
                 this.length,
                 this.length
         );
-    }
+        Color oldColor = graphics2D.getColor();
+        graphics2D.setColor(fillColor);
+        graphics2D.fillRect(
+            this.x - this.length/2,
+            this.y - this.length/2,
+            this.length,
+            this.length);
+        graphics2D.setColor(oldColor);
 
-    public void remove(){
-        this.draw(Color.WHITE);
     }
 
     public String getName(){

@@ -35,10 +35,10 @@ public abstract class Shape implements Serializable {
     public void draw(){
         this.graphics.setColor(this.edgeColor);
         this.mainApp.getCanvas().getImageGraphics().setColor(this.edgeColor);
-        this.draw(this.graphics);
-        this.draw(this.mainApp.getCanvas().getImageGraphics());
+        this.draw(this.graphics, this.fillColor);
+        this.draw(this.mainApp.getCanvas().getImageGraphics(), this.fillColor);
     }
-    public abstract void draw(Graphics2D graphics2D);
+    public abstract void draw(Graphics2D graphics2D, Color fillColor);
 
     public void draw(Color color){
         Color oldColor = this.graphics.getColor();
@@ -51,7 +51,15 @@ public abstract class Shape implements Serializable {
         this.mainApp.getCanvas().getImageGraphics().setColor(oldColor);
     }
     public abstract String getName();
-    public abstract void remove();
+    public void remove(){
+        Color oldFill = this.fillColor;
+        Color oldEdge = this.edgeColor;
+        this.fillColor = Color.white;
+        this.edgeColor = Color.white;
+        this.draw(Color.WHITE);
+        this.fillColor = oldFill;
+        this.edgeColor = oldEdge;
+    }
 
     public abstract String toString();
 

@@ -156,7 +156,7 @@ public class ShapeSettings extends JPanel {
 
         if(this.isRandom.isSelected()){
             edgeColor = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
-            fillColor = this.edgeColor;
+            fillColor = edgeColor;
         }
 
         System.out.println(this.edgeColor);
