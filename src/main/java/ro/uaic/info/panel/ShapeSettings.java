@@ -17,6 +17,11 @@ public class ShapeSettings extends JPanel {
     private JLabel strokeSliderLabel;
     private JSpinner sizeSlider;
     private JSpinner strokeSlider;
+    private JButton selectEdgeColor;
+    private JButton selectFillColor;
+    private Color edgeColor = Color.BLACK;
+    private Color fillColor = Color.WHITE;
+    private JCheckBox isRandom;
 
     private static boolean initalised =  false;
 
@@ -34,7 +39,7 @@ public class ShapeSettings extends JPanel {
 
     public ShapeSettings(App mainFrame, ShapePreview selected){
         super();
-        this.windowWidth = 150;
+        this.windowWidth = 190;
         this.setBounds(
                 mainFrame.getWidth()- 16 - this.windowWidth,
                 mainFrame.getShapes().getHeight(),
@@ -58,8 +63,17 @@ public class ShapeSettings extends JPanel {
         this.sizeSlider = new JSpinner();
         this.strokeSlider = new JSpinner();
 
+        this.selectEdgeColor = new JButton("Select Edge Color");
+        this.selectFillColor = new JButton("Select Fill Color");
+
+        this.isRandom = new JCheckBox("Random Color");
+
         this.sizeSlider.setValue(50);
         this.strokeSlider.setValue(2);
+
+        this.selectFillColor.addActionListener(e->this.fillSelectColor());
+        this.selectEdgeColor.addActionListener(e->this.edgeSelectColor());
+        this.isRandom.addActionListener(e->this.randomStateChanged());
 
         this.shapeName = new JLabel(this.whichShape);
 
@@ -69,6 +83,9 @@ public class ShapeSettings extends JPanel {
                             .addComponent(this.shapeName)
                             .addComponent(this.sizeSliderLabel)
                             .addComponent(this.strokeSliderLabel)
+                            .addComponent(this.selectEdgeColor)
+                            .addComponent(this.selectFillColor)
+                            .addComponent(this.isRandom)
                     )
                     .addGroup(windowLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(this.sizeSlider)
@@ -87,6 +104,9 @@ public class ShapeSettings extends JPanel {
                             .addComponent(this.strokeSliderLabel)
                             .addComponent(this.strokeSlider)
                     )
+                    .addComponent(this.selectEdgeColor)
+                    .addComponent(this.selectFillColor)
+                    .addComponent(this.isRandom)
         );
 
         //windowLayout.linkSize(SwingConstants.VERTICAL, this.sizeSlider, this.sizeSliderLabel);
@@ -95,6 +115,24 @@ public class ShapeSettings extends JPanel {
 
         mainFrame.getCanvas().shrinkForSettingsPanel(this.windowWidth);
         ShapeSettings.initalised = true;
+    }
+
+    private void randomStateChanged(){
+        if(this.isRandom.isSelected()){
+            this.selectEdgeColor.setEnabled(false);
+            this.selectFillColor.setEnabled(false);
+        }
+        else{
+            this.selectEdgeColor.setEnabled(true);
+            this.selectFillColor.setEnabled(true);
+        }
+    }
+
+    private void edgeSelectColor(){
+    }
+
+    private void fillSelectColor(){
+
     }
 
     public void resetSettings(ShapePreview preview){
@@ -113,18 +151,31 @@ public class ShapeSettings extends JPanel {
     }
 
     public Shape createShape(App mainApp) throws InvalidShape {
+        Color edgeColor = Color.BLACK;
+        Color fillColor = Color.WHITE;
+
+        if(this.isRandom.isSelected()){
+            edgeColor = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
+            fillColor = this.edgeColor;
+        }
+
+        System.out.println(this.edgeColor);
         switch(this.whichShape){
             case "Square" : return new Square(
                     mainApp,
                     this.sizeSlider.getValue(),
                     this.strokeSlider.getValue(),
-                    MouseInfo.getPointerInfo().getLocation()
+                    MouseInfo.getPointerInfo().getLocation(),
+                    edgeColor,
+                    fillColor
             );
             case "Circle" : return new Circle(
                     mainApp,
                     this.sizeSlider.getValue(),
                     this.strokeSlider.getValue(),
-                    MouseInfo.getPointerInfo().getLocation()
+                    MouseInfo.getPointerInfo().getLocation(),
+                    edgeColor,
+                    fillColor
             );
             default : throw new InvalidShape("No such Shape exists");
 

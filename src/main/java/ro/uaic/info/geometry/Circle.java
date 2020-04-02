@@ -31,7 +31,7 @@ public class Circle extends Shape implements Serializable {
         return c;
     }
 
-    public Circle()
+    private Circle()
     {
         this.x = 0;
         this.y = 0;
@@ -41,44 +41,37 @@ public class Circle extends Shape implements Serializable {
         this.graphics = null;
     }
 
-    public Circle(App mainApp, Object size, Object stroke, Point center){
+    public Circle(App mainApp, Object size, Object stroke, Point center, Color edgeColor, Color fillColor){
+        this.edgeColor = edgeColor;
+        this.fillColor = fillColor;
         System.out.println(size + " " + stroke + " " + center.x + " " + center.y);
 
-        this.x = center.x;
-        this.y = center.y;
+        this.mainApp = mainApp;
+        this.x = center.x - this.mainApp.getActiveShapes().getWidth() - 8;
+        this.y = center.y - this.mainApp.getShapes().getHeight() - App.TITLE_BAR_HEIGHT + 8;
 
         this.ray = (int)size;
 
         this.stroke = (int)stroke;
 
-        this.mainApp = mainApp;
-        this.graphics = this.mainApp.getCanvas().getGraphics2D();
+        this.graphics = (Graphics2D)this.mainApp.getCanvas().getGraphics();
     }
 
     @Override
-    public void draw() {
-        this.graphics.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0f, null, 0f));
-        this.graphics.drawOval(
+    public void draw(Graphics2D graphics2D) {
+        graphics2D.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0f, null, 0f));
+        graphics2D.drawOval(
                 this.x - ray/2,
                 this.y - ray/2,
                 this.ray,
                 this.ray
         );
+        //this.graphics.drawLine(this.x, this.y - ray/2, this.x, this.y + ray/2);
+        //this.graphics.drawLine(this.x - ray/2, this.y, this.x + ray/2, this.y);
     }
 
     public void remove(){
         this.draw(Color.WHITE);
-    }
-
-    @Override
-    public void draw(Color color) {
-        Color oldColor = this.graphics.getColor();
-
-        this.graphics.setColor(color);
-
-        this.draw();
-
-        this.graphics.setColor(oldColor);
     }
 
     public String getName(){

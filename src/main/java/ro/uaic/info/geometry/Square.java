@@ -41,22 +41,24 @@ public class Square extends Shape implements Serializable {
         this.stroke = 0;
     }
 
-    public Square(App mainFrame, Object size, Object stroke, Point center){
+    public Square(App mainFrame, Object size, Object stroke, Point center,Color edgeColor, Color fillColor){
+        this.edgeColor = edgeColor;
+        this.fillColor = fillColor;
         System.out.println(size + " " + stroke + " " + center.x + " " + center.y);
 
-        this.x = center.x;
-        this.y = center.y;
+        this.mainApp = mainFrame;
+        this.x = center.x - this.mainApp.getActiveShapes().getWidth() - 8;
+        this.y = center.y - this.mainApp.getShapes().getHeight() - App.TITLE_BAR_HEIGHT + 8;
         this.length = (int)size;
         this.stroke = (int)stroke;
 
-        this.mainApp = mainFrame;
-        this.graphics = this.mainApp.getCanvas().getGraphics2D();
+        this.graphics = (Graphics2D) this.mainApp.getCanvas().getGraphics();
 
     }
 
-    public void draw(){
-        this.graphics.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0f, null, 0f));
-        this.graphics.drawRect(
+    public void draw(Graphics2D graphics2D){
+        graphics2D.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0f, null, 0f));
+        graphics2D.drawRect(
                 this.x - this.length/2,
                 this.y - this.length/2,
                 this.length,
@@ -66,15 +68,6 @@ public class Square extends Shape implements Serializable {
 
     public void remove(){
         this.draw(Color.WHITE);
-    }
-
-    public void draw(Color color){
-        Color oldColor = this.graphics.getColor();
-
-        this.graphics.setColor(color);
-        this.draw();
-
-        this.graphics.setColor(oldColor);
     }
 
     public String getName(){

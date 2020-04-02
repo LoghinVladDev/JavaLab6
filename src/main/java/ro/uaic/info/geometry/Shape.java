@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public abstract class Shape implements Serializable {
+    protected Color edgeColor;
+    protected Color fillColor;
     protected App mainApp;
     protected Graphics2D graphics;
     public enum Shapes{
@@ -22,8 +24,32 @@ public abstract class Shape implements Serializable {
         this.graphics = graphics;
     }
 
-    public abstract void draw();
-    public abstract void draw(Color color);
+    public void setMainApp(App mainApp){ this.mainApp = mainApp; }
+
+    public void setEdgeColor(Color color){ this.edgeColor = color; }
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
+    }
+
+    public void draw(){
+        this.graphics.setColor(this.edgeColor);
+        this.mainApp.getCanvas().getImageGraphics().setColor(this.edgeColor);
+        this.draw(this.graphics);
+        this.draw(this.mainApp.getCanvas().getImageGraphics());
+    }
+    public abstract void draw(Graphics2D graphics2D);
+
+    public void draw(Color color){
+        Color oldColor = this.graphics.getColor();
+
+        this.graphics.setColor(color);
+        this.mainApp.getCanvas().getImageGraphics().setColor(color);
+        this.draw();
+
+        this.graphics.setColor(oldColor);
+        this.mainApp.getCanvas().getImageGraphics().setColor(oldColor);
+    }
     public abstract String getName();
     public abstract void remove();
 

@@ -31,7 +31,6 @@ public class App extends JFrame {
     private int windowOffsetY = APP_WINDOW_DEFAULT_Y_OFFSET;
 
     public App(){
-        super();
         super.setBounds(
                 this.windowOffsetX,
                 this.windowOffsetY,
@@ -56,7 +55,6 @@ public class App extends JFrame {
         super.setLayout(null);
         super.setVisible(true);
         super.setSize(this.windowWidth+15, this.windowHeight);
-        this.canvas.initGraphics();
     }
 
     public ShapeSelector getShapes(){
@@ -90,7 +88,7 @@ class MouseEventHandler implements MouseListener {
             System.out.println("Mouse pressed on " + e.getComponent().getClass().getName());
             try {
                 Shape a = this.mainFrame.getShapeSettings().createShape(this.mainFrame); //TODO : Assign to left panel
-                a.draw(Color.BLACK);
+                a.draw();
                 this.mainFrame.getActiveShapes().addShape(a);
             }
             catch(Exception exception){

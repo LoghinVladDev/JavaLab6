@@ -1,9 +1,11 @@
 package ro.uaic.info.panel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +21,6 @@ public class ActiveElements extends JPanel implements Serializable {
 
     public ActiveElements(App mainFrame){
         super();
-
         this.setBounds(0,
                 mainFrame.getShapes().getHeight(),
                 120,
@@ -68,6 +69,17 @@ public class ActiveElements extends JPanel implements Serializable {
 
     }
 
+    public void saveAsImage(String path){
+        try{
+            if(ImageIO.write(this.mainFrame.getCanvas().getImage(), "png", new File(path))) {
+                System.out.println("--saved--");
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void save(String path){
         try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(
                 new FileOutputStream(
@@ -103,7 +115,8 @@ public class ActiveElements extends JPanel implements Serializable {
             do{
                 s = Shape.readObject(objectInputStream);
                 if(s != null) {
-                    s.setGraphics((Graphics2D)this.mainFrame.getGraphics());
+                    s.setGraphics((Graphics2D)this.mainFrame.getCanvas().getGraphics());
+                    s.setMainApp(this.mainFrame);
                     this.listModel.addElement(s);
                     s.draw();
                     System.out.println(s);
